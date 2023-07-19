@@ -1,0 +1,144 @@
+/* index.css */
+
+.seat {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    background-color: lightgray;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: green;
+}
+
+.available {
+    background-color: lightgray;
+}
+
+.seat-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.map-container {
+  width: 100%;
+  height: 100vh;
+}
+.map-info {
+  position: absolute;
+  top: 3rem;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 1;
+}
+/* .driver-info {
+  position: 'absolute';
+      z-index: 1;
+      top: 'calc(50% - 20px)';
+      left: 'calc(50% + 20px)';
+      background-color: 'rgba(255, 255, 255, 0.8)';
+      padding: '10px';
+      border-radius: '5px';
+      font-size: '14px';
+      font-weight: 'bold';
+} */
+
+/* import React, { useEffect, useState } from 'react';
+import { useGlobalContext } from "./Context";
+
+const Seats = () => {
+  const { busData, selectedBusId } = useGlobalContext();
+  const [seats, setSeats] = useState([]);
+  const [selectedSeat, setSelectedSeat] = useState(null);
+  const [priceData, setPriceData] = useState({});
+
+  const getPriceDataFromLocalStorage = (busData) => {
+    return busData.reduce((price, bus) => {
+      price[bus.id] = bus.price;
+      return price;
+    }, {});
+  };
+
+  const saveSeatDataToLocalStorage = (busData, seatData) => {
+    const updatedData = busData.map((bus) => {
+      if (bus.id === selectedBusId) {
+        return {
+          ...bus,
+          seats: seatData.map((seat) => seat.id),
+        };
+      }
+      return bus;
+    });
+    localStorage.setItem('busSeats', JSON.stringify(updatedData));
+  };
+
+  useEffect(() => {
+    const selectedBus = busData.find((bus) => bus.id === selectedBusId);
+    if (selectedBus) {
+      const { seats } = selectedBus;
+      const seatObjects = Array.from({ length: 64 }, (_, index) => ({
+        id: `Seat ${index + 1}`,
+        booked: seats.includes(`Seat ${index + 1}`),
+        selected: false,
+      }));
+      setSeats(seatObjects);
+    }
+
+    const priceData = getPriceDataFromLocalStorage(busData);
+    setPriceData(priceData);
+  }, [busData, selectedBusId]);
+
+  const handleSeatSelection = (seatId) => {
+    const updatedSeats = seats.map((seat) => {
+      if (seat.id === seatId) {
+        return {
+          ...seat,
+          selected: !seat.selected,
+        };
+      }
+      return seat;
+    });
+
+    setSeats(updatedSeats);
+    saveSeatDataToLocalStorage(busData, updatedSeats);
+
+    const selectedSeat = updatedSeats.find((seat) => seat.id === seatId);
+    setSelectedSeat(selectedSeat);
+  };
+
+  return (
+    <div>
+      <h1>Seat Selection</h1>
+      <div>
+        {seats.map((seat) => (
+          <button
+            key={seat.id}
+            onClick={() => handleSeatSelection(seat.id)}
+            style={{
+              backgroundColor: seat.selected ? 'blue' : seat.booked ? 'red' : 'green',
+            }}
+            disabled={seat.booked}
+          >
+            {seat.id}
+          </button>
+        ))}
+      </div>
+      {selectedSeat && (
+        <div>
+          <h2>Selected Seat: {selectedSeat.id}</h2>
+          <p>Price: {priceData[selectedBusId]}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Seats; */

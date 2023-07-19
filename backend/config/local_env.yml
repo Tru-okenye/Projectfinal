@@ -1,0 +1,7 @@
+MPESA_CONSUMER_KEY: 'lfPeIPhZ7KDHfyNCFILttArLsKhZv0Ma'
+MPESA_CONSUMER_SECRET: 'Voqvlbj5qApy6YEK'
+MPESA_PASSKEY: 'fef66eba0f3f6485df404ac4980e3f49924cc8a8b3e6ef7dd6bbc238cdd0629c'
+MPESA_SHORTCODE: '6437127'
+# MPESA_INITIATOR_NAME: 'testapi'
+# MPESA_INITIATOR_PASSWORD: 'Safaricom999!*!'
+# REGISTER_URL: "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"

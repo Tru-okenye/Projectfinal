@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  email: MyString
+  password_digest: MyString
+  confirmation_token: MyString
+  confirmed_at: 2023-06-15 14:22:01
+  confirmation_sent_at: 2023-06-15 14:22:01
+
+two:
+  name: MyString
+  email: MyString
+  password_digest: MyString
+  confirmation_token: MyString
+  confirmed_at: 2023-06-15 14:22:01
+  confirmation_sent_at: 2023-06-15 14:22:01
