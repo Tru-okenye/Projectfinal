@@ -1,2 +1,0 @@
-class Bus < ApplicationRecord
-end
