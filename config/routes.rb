@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     resources :buses, defaults: { format: :json }, only: [:index, :show, :create, :update, :destroy]
   end
 
-  root 'users#index' 
+  root 'api/users#index' 
   # Other routes
   resources :mpesas
 end

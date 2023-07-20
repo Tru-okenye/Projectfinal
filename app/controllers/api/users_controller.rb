@@ -1,4 +1,5 @@
- class Api::UsersController < ApplicationController
+module Api
+  class UsersController < ApplicationController
   def index
     email = params[:email]
     password = params[:password]
