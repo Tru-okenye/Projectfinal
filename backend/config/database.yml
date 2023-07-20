@@ -29,8 +29,5 @@ test:
 
 production:
   <<: *default
-  database: 'db_production' # Change this to the name of your production database
-  username: 'truphy' # Change this to the username for your production PostgreSQL user
-  password: '@Truphy1.' 
-  
+  url: <%= ENV['DATABASE_URL'] %>
 
