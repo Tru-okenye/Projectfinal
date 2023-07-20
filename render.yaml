@@ -1,12 +1,12 @@
 databases:
   - name: db_production
     ipAllowList: []
-    databaseName: 
+    databaseName: db_production
     user: truphy
 
 services:
   - type: web
-    name: my_bus
+    name: db_production
     env: ruby
     buildCommand: "./render-build.sh"
     startCommand: "bundle exec rails s"
@@ -16,4 +16,4 @@ services:
           name: postgres
           property: connectionString
       - key: RAILS_MASTER_KEY
-        sync: false
+    sync: false
