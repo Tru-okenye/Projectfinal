@@ -51,8 +51,8 @@ config.action_mailer.smtp_settings = {
   # config.action_cable.url = "wss://example.com/cable"
   # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
 # Compress JavaScripts and CSS
-config.assets.js_compressor = :uglifier
-config.assets.css_compressor = :sass
+# config.assets.js_compressor = :uglifier
+# config.assets.css_compressor = :sass
 
 # Specify additional assets to be precompiled
 # config.assets.precompile += %w( admin.js admin.css )

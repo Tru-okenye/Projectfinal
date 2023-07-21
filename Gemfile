@@ -24,7 +24,7 @@ gem 'google-api-client'
 
 gem 'base64'
 
-gem 'webpacker', '~> 5.4'
+
 
 
 gem "dotenv-rails", groups: [:development, :test]

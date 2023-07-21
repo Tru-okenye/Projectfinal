@@ -1,4 +1,4 @@
-class Api::UsersController < ApplicationController
+ class Api::UsersController < ApplicationController
   def index
     email = params[:email]
     password = params[:password]
@@ -26,9 +26,4 @@ class Api::UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :email, :password)
   end
-
-def root
-    # Implement the logic for the root page here
-    render json: { message: 'Welcome to the Root Page!' }, status: :ok
-  end
-
+end
