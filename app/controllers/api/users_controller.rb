@@ -1,7 +1,9 @@
  class Api::UsersController < ApplicationController
-  def index
-    email = params[:email]
-    password = params[:password]
+ def index
+  email = params[:email]
+  password = params[:password]
+
+  begin
     @user = User.find_by(email: email)
 
     if @user&.authenticate(password)
@@ -9,7 +11,13 @@
     else
       render json: { error: 'Invalid email or password.' }, status: :unauthorized
     end
+  rescue StandardError => e
+    # Log the error for debugging purposes
+    Rails.logger.error("Error in UsersController#index: #{e.message}")
+    render json: { error: 'An unexpected error occurred.' }, status: :internal_server_error
   end
+end
+
 
   def create
     @user = User.new(user_params)
