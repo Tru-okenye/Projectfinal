@@ -36,7 +36,7 @@ config.action_mailer.smtp_settings = {
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
-  config.assets.compile = true
+  # config.assets.compile = true
 
 
   # Specifies the header that your server uses for sending files.
