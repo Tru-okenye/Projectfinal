@@ -36,6 +36,8 @@ config.action_mailer.smtp_settings = {
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
+  config.assets.compile = true
+
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for Apache
@@ -48,9 +50,15 @@ config.action_mailer.smtp_settings = {
   # config.action_cable.mount_path = nil
   # config.action_cable.url = "wss://example.com/cable"
   # config.action_cable.allowed_request_origins = [ "http://example.com", /http:\/\/example.*/ ]
+# Compress JavaScripts and CSS
+config.assets.js_compressor = :uglifier
+config.assets.css_compressor = :sass
 
+# Specify additional assets to be precompiled
+config.assets.precompile += %w( admin.js admin.css )
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
+# RAILS_ENV=production bundle exec rails assets:precompile
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
