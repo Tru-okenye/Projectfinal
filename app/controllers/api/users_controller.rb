@@ -33,4 +33,3 @@ def root
     render json: { message: 'Welcome to the Root Page!' }, status: :ok
   end
 end
-end
