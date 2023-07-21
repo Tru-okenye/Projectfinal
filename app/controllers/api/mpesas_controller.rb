@@ -24,7 +24,7 @@ class Api::MpesasController < ApplicationController
       'PartyA' => phoneNumber,
       'PartyB' => business_short_code,
       'PhoneNumber' => phoneNumber,
-      'callbackurl' => 'https://c064-105-163-1-124.ngrok-free.app/callback',
+      'CallBackURL' => 'https://lets-ride-fe42d9bf40d4.herokuapp.com/callback',
       'AccountReference' => 'mybuss',
       'TransactionDesc' => 'Payment for my bus'
     }.to_json
