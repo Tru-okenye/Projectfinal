@@ -32,5 +32,5 @@ def root
     # Implement the logic for the root page here
     render json: { message: 'Welcome to the Root Page!' }, status: :ok
   end
-
+end
 end
