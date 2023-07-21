@@ -55,7 +55,7 @@ config.assets.js_compressor = :uglifier
 config.assets.css_compressor = :sass
 
 # Specify additional assets to be precompiled
-config.assets.precompile += %w( admin.js admin.css )
+# config.assets.precompile += %w( admin.js admin.css )
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 # RAILS_ENV=production bundle exec rails assets:precompile
