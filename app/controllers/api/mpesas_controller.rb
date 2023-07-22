@@ -22,7 +22,7 @@ class Api::MpesasController < ApplicationController
       'TransactionType' => 'CustomerBuyGoodsOnline',
       'Amount' => amount,
       'PartyA' => phoneNumber,
-      'PartyB' => business_short_code,
+      'PartyB' => '8676510',
       'PhoneNumber' => phoneNumber,
       'CallBackURL' => 'https://lets-ride-fe42d9bf40d4.herokuapp.com/callback',
       'AccountReference' => 'mybuss',
