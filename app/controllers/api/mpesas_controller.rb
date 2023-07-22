@@ -59,9 +59,48 @@ class Api::MpesasController < ApplicationController
     end
   end
 
+ def callback
+    # Process the response from the M-Pesa API here
+    # For example, assume the payment status is sent in the request body as 'Body'
+    payment_status = params[:Body]
 
+    # Update the payment status in the model
+    update_payment_status(payment_status)
+
+    # Respond to the M-Pesa API with a success message
+    render json: { success: true }
+  end
 
   private
+
+
+  def update_payment_status(payment_status)
+    # Implement your logic here to update the payment status in your model
+    # For example, if you have a Payment model, you can update the payment status for a specific payment record
+
+    # Assuming you have a 'payment_id' parameter sent from the M-Pesa API
+    payment_id = params[:payment_id]
+    payment = Payment.find_by(id: payment_id)
+
+    if payment.present?
+      # Assuming you have a 'status' column in your Payment model to store the payment status
+      payment.update(status: payment_status)
+
+      # You can also perform other actions based on the payment status if needed
+      if payment_status == 'completed'
+        # Perform actions for a successful payment
+      elsif payment_status == 'failed'
+        # Perform actions for a failed payment
+      end
+    else
+      # Handle the case where the payment record is not found
+    end
+  end
+
+
+
+
+
 
   def generate_access_token_request
     url = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
