@@ -96,7 +96,7 @@ class Api::MpesasController < ApplicationController
         body = JSON.parse(res.body, symbolize_names: true)
         token = body[:access_token]
         expires_in = body[:expires_in]
-        access_token = AccessToken.create!(token: token, expires_at: Time.now + 2.days)
+        access_token = AccessToken.create!(token: token, expires_at: Time.now + 1.minute)
       else
         raise MpesaError, 'Unable to generate access token'
       end
