@@ -22,7 +22,7 @@ class Api::MpesasController < ApplicationController
       'TransactionType' => 'CustomerBuyGoodsOnline',
       'Amount' => amount,
       'PartyA' => phoneNumber,
-      'PartyB' => '8676510',
+      'PartyB' => business_short_code,
       'PhoneNumber' => phoneNumber,
       'CallBackURL' => 'https://lets-ride-fe42d9bf40d4.herokuapp.com/callback',
       'AccountReference' => 'mybuss',
@@ -74,34 +74,6 @@ class Api::MpesasController < ApplicationController
   private
 
 
-  def update_payment_status(payment_status)
-    # Implement your logic here to update the payment status in your model
-    # For example, if you have a Payment model, you can update the payment status for a specific payment record
-
-    # Assuming you have a 'payment_id' parameter sent from the M-Pesa API
-    payment_id = params[:payment_id]
-    payment = Payment.find_by(id: payment_id)
-
-    if payment.present?
-      # Assuming you have a 'status' column in your Payment model to store the payment status
-      payment.update(status: payment_status)
-
-      # You can also perform other actions based on the payment status if needed
-      if payment_status == 'completed'
-        # Perform actions for a successful payment
-      elsif payment_status == 'failed'
-        # Perform actions for a failed payment
-      end
-    else
-      # Handle the case where the payment record is not found
-    end
-  end
-
-
-
-
-
-
   def generate_access_token_request
     url = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
     consumer_key = MPESA_CONSUMER_KEY
@@ -131,5 +103,28 @@ class Api::MpesasController < ApplicationController
     end
 
     access_token.token
+  end
+
+    def update_payment_status(payment_status)
+    # Implement your logic here to update the payment status in your model
+    # For example, if you have a Payment model, you can update the payment status for a specific payment record
+
+    # Assuming you have a 'payment_id' parameter sent from the M-Pesa API
+    payment_id = params[:payment_id]
+    payment = Payment.find_by(id: payment_id)
+
+    if payment.present?
+      # Assuming you have a 'status' column in your Payment model to store the payment status
+      payment.update(status: payment_status)
+
+      # You can also perform other actions based on the payment status if needed
+      if payment_status == 'completed'
+        # Perform actions for a successful payment
+      elsif payment_status == 'failed'
+        # Perform actions for a failed payment
+      end
+    else
+      # Handle the case where the payment record is not found
+    end
   end
 end
