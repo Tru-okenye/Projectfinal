@@ -86,6 +86,7 @@ class Api::MpesasController < ApplicationController
   end
 
  def callback
+   puts "Callback action triggered!"
     # Process the response from the M-Pesa API here
     # For example, assume the payment status is sent in the request body as 'Body'
     payment_status = params[:Body]
