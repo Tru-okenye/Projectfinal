@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     post 'stkpush', to: 'mpesas#stkpush'
-    
-    get 'callback', to: 'mpesas#callback'
+    post 'callback', to: 'mpesas#callback'
     resources :payments, only: [:create]
     
     # Other API routes
