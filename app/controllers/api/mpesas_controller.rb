@@ -22,7 +22,7 @@ class Api::MpesasController < ApplicationController
       'TransactionType' => 'CustomerBuyGoodsOnline',
       'Amount' => amount,
       'PartyA' => phoneNumber,
-      'PartyB' => business_short_code,
+      'PartyB' => '8676510',
       'PhoneNumber' => phoneNumber,
       'CallBackURL' => 'https://lets-ride-fe42d9bf40d4.herokuapp.com/callback',
       'AccountReference' => 'mybuss',
@@ -96,7 +96,7 @@ class Api::MpesasController < ApplicationController
         body = JSON.parse(res.body, symbolize_names: true)
         token = body[:access_token]
         expires_in = body[:expires_in]
-        access_token = AccessToken.create!(token: token, expires_at: Time.now + 1.minute)
+        access_token = AccessToken.create!(token: token, expires_at: Time.now + 2.days)
       else
         raise MpesaError, 'Unable to generate access token'
       end
