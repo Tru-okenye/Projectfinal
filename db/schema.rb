@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_22_040607) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_23_173203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -33,6 +33,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_22_040607) do
     t.string "driver_name"
     t.string "number_plate"
     t.string "driver_phone_number"
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.string "employee_id"
+    t.string "employee_number"
+    t.string "employee_name"
+    t.string "phone_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "mpesas", force: :cascade do |t|
@@ -58,14 +67,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_22_040607) do
     t.datetime "updated_at", null: false
     t.string "email"
     t.string "status"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
 end
