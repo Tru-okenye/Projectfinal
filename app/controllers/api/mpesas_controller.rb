@@ -39,19 +39,45 @@ class Api::MpesasController < ApplicationController
     puts "Payload: #{payload}"
     puts "Headers: #{headers}"
 
-    begin
+  #   begin   
+  #     response = RestClient.post(url, payload, headers)
+  #     puts "Response code: #{response.code}"
+  #     puts "Response body: #{response.body}"
+  #     case response.code
+  #     when 200
+  #       render json: { success: true, data: JSON.parse(response.body) }
+  #     else
+  #       render json: { success: false, error: "Request failed with code #{response.code}", response: response.body }
+  #     end
+  #   rescue RestClient::ExceptionWithResponse => e
+  #     puts "RestClient::ExceptionWithResponse: #{e.message}"
+  #      puts "Response body: #{e.response.body}"
+  #     render json: { success: false, error: "Request failed with an exception", exception: e.message }
+  #   rescue StandardError => e
+  #     puts "StandardError: #{e.message}"
+  #     render json: { success: false, error: "An error occurred", exception: e.message }
+  #   end
+  # end
+
+ begin
       response = RestClient.post(url, payload, headers)
       puts "Response code: #{response.code}"
       puts "Response body: #{response.body}"
-      case response.code
-      when 200
-        render json: { success: true, data: JSON.parse(response.body) }
+
+      # After making the STK push API call and getting the response
+      response_data = JSON.parse(response.body)
+      response_code = response_data['ResponseCode']
+
+      if response_code == '0'
+        # STK push was successful, respond with success and the CheckoutRequestID
+        render json: { success: true, checkoutRequestID: response_data['CheckoutRequestID'] }
       else
-        render json: { success: false, error: "Request failed with code #{response.code}", response: response.body }
+        # STK push failed, respond with error message and the ResponseDescription
+        render json: { success: false, error: response_data['ResponseDescription'] }
       end
     rescue RestClient::ExceptionWithResponse => e
       puts "RestClient::ExceptionWithResponse: #{e.message}"
-       puts "Response body: #{e.response.body}"
+      puts "Response body: #{e.response.body}"
       render json: { success: false, error: "Request failed with an exception", exception: e.message }
     rescue StandardError => e
       puts "StandardError: #{e.message}"
