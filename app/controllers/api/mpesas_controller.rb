@@ -1,6 +1,8 @@
 require 'rest-client'
 
 class Api::MpesasController < ApplicationController
+  
+
   MPESA_CONSUMER_KEY = 'lfPeIPhZ7KDHfyNCFILttArLsKhZv0Ma'
   MPESA_CONSUMER_SECRET = 'Voqvlbj5qApy6YEK'
   MPESA_PASSKEY = 'fef66eba0f3f6485df404ac4980e3f49924cc8a8b3e6ef7dd6bbc238cdd0629c'
@@ -84,27 +86,20 @@ class Api::MpesasController < ApplicationController
       render json: { success: false, error: "An error occurred", exception: e.message }
     end
   end
+  
+ skip_before_action :verify_authenticity_token, only: :callback 
 
  def callback
-  puts "Callback action triggered!"
-  
-  # Process the response from the M-Pesa API here
-  response_data = params[:Body]
-  result_code = response_data['stkCallback']['ResultCode']
-  result_desc = response_data['stkCallback']['ResultDesc']
-
-  if result_code == 0
-    # Payment was successful
-    update_payment_status('completed')
-  else
-    # Payment failed or was cancelled
-    update_payment_status('failed')
+    # Extract the payment status and other relevant data from the request
+    payment_status = params.dig('Body', 'stkCallback', 'ResultCode')
+    
+    # You can implement your logic here to update the payment status in your model (e.g., Payment model)
+    # For example, you can use the `update_payment_status` method you shared earlier
+    update_payment_status(payment_status)
+    
+    # Respond with the payment status as JSON
+    render json: { paymentStatus: payment_status }
   end
-
-  # Respond to the M-Pesa API with a success message
-  render json: { success: true }
-end
-
 
   private
 
@@ -153,10 +148,10 @@ end
       payment.update(status: payment_status)
 
       # You can also perform other actions based on the payment status if needed
-      if payment_status == 'completed'
-        # Perform actions for a successful payment
-      elsif payment_status == 'failed'
-        # Perform actions for a failed payment
+      if payment_status == '0'
+        # Payment was successful
+      else
+        # Payment failed
       end
     else
       # Handle the case where the payment record is not found
