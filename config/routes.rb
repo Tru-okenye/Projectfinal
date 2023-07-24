@@ -7,11 +7,11 @@ Rails.application.routes.draw do
     resources :payments, only: [:create]
     
     # Other API routes
-    resources :users, only: [:create, :index]
+  
     resources :buses, defaults: { format: :json }, only: [:index, :show, :create, :update, :destroy]
   end
 
-  root 'api/users#index' 
+  root 'api/buses#index' 
   # Other routes
   resources :mpesas
   
