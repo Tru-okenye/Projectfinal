@@ -24,7 +24,7 @@ class Api::MpesasController < ApplicationController
       'PartyA' => phoneNumber,
       'PartyB' => '8676510',
       'PhoneNumber' => phoneNumber,
-      'CallBackURL' => 'https://lets-ride-fe42d9bf40d4.herokuapp.com/callback',
+      'CallBackURL' => 'https://lets-ride-fe42d9bf40d4.herokuapp.com/api/callback',
       'AccountReference' => 'mybuss',
       'TransactionDesc' => 'Payment for my bus'
     }.to_json
