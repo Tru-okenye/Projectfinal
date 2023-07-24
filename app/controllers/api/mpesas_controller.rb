@@ -86,17 +86,25 @@ class Api::MpesasController < ApplicationController
   end
 
  def callback
-   puts "Callback action triggered!"
-    # Process the response from the M-Pesa API here
-    # For example, assume the payment status is sent in the request body as 'Body'
-    payment_status = params[:Body]
+  puts "Callback action triggered!"
+  
+  # Process the response from the M-Pesa API here
+  response_data = params[:Body]
+  result_code = response_data['stkCallback']['ResultCode']
+  result_desc = response_data['stkCallback']['ResultDesc']
 
-    # Update the payment status in the model
-    update_payment_status(payment_status)
-
-    # Respond to the M-Pesa API with a success message
-    render json: { success: true }
+  if result_code == 0
+    # Payment was successful
+    update_payment_status('completed')
+  else
+    # Payment failed or was cancelled
+    update_payment_status('failed')
   end
+
+  # Respond to the M-Pesa API with a success message
+  render json: { success: true }
+end
+
 
   private
 
