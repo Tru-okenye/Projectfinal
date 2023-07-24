@@ -1,5 +1,5 @@
 
-class Api::SessionsController < ApplicationController
+class Api::EmployeesController < ApplicationController
   def login
     # Assuming the frontend sends employee_id and employee_number in the request parameters
     employee_id = params[:employee_id]
