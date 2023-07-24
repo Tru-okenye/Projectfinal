@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   namespace :api do
-    post 'sessions/login', to: 'sessions#login'
+    post 'employees/login', to: 'employees#login'
     post 'stkpush', to: 'mpesas#stkpush'
     post 'callback', to: 'mpesas#callback'
   
