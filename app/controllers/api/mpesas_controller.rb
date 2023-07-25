@@ -90,24 +90,16 @@ class Api::MpesasController < ApplicationController
  skip_before_action :verify_authenticity_token, only: :callback 
 
  def callback
-    # Extract the payment status and other relevant data from the request
-    payment_status = params.dig('Body', 'stkCallback', 'ResultCode')
-    
-    result_code = case payment_status
-                when '0'
-                  '000000' # Payment was successful
-                when '1'
-                  '1032' # Payment failed
-                else
-                  ''   # Payment status is still pending
-                end
-    # You can implement your logic here to update the payment status in your model (e.g., Payment model)
-    # For example, you can use the `update_payment_status` method you shared earlier
-    update_payment_status(payment_status)
-    
-    # Respond with the payment status as JSON
-    render json: { paymentStatus: payment_status, ResultCode: result_code }
-  end
+  # Extract the payment status and other relevant data from the request
+  payment_status = params.dig('Body', 'stkCallback', 'ResultCode')
+  
+  # You can implement your logic here to update the payment status in your model (e.g., Payment model)
+  # For example, you can use the `update_payment_status` method you shared earlier
+  update_payment_status(payment_status)
+  
+  # Respond with the payment status as JSON
+  render json: { paymentStatus: payment_status }
+end
 
   private
 
@@ -143,26 +135,40 @@ class Api::MpesasController < ApplicationController
     access_token.token
   end
 
-    def update_payment_status(payment_status)
-    # Implement your logic here to update the payment status in your model
-    # For example, if you have a Payment model, you can update the payment status for a specific payment record
+ def update_payment_status(payment_status)
+  # Implement your logic here to update the payment status in your model
+  # For example, if you have a Payment model, you can update the payment status for a specific payment record
 
-    # Assuming you have a 'payment_id' parameter sent from the M-Pesa API
-    payment_id = params[:payment_id]
-    payment = Payment.find_by(id: payment_id)
+  # Assuming you have a 'payment_id' parameter sent from the M-Pesa API
+  payment_id = params[:payment_id]
+  payment = Payment.find_by(id: payment_id)
 
-    if payment.present?
-      # Assuming you have a 'status' column in your Payment model to store the payment status
-      payment.update(status: payment_status)
-
-      # You can also perform other actions based on the payment status if needed
-      if payment_status == '0'
-        # Payment was successful
-      else
-        # Payment failed
-      end
+  if payment.present?
+    # Assuming you have a 'status' column in your Payment model to store the payment status
+    case payment_status
+    when '0'
+      # Payment was successful
+      payment.update(status: 'successful')
+    when '1'
+      # Payment failed
+      payment.update(status: 'failed')
+    when '1032'
+      # Payment was canceled by the user
+      payment.update(status: 'canceled')
     else
-      # Handle the case where the payment record is not found
+      # Handle other status codes if needed
+      payment.update(status: 'unknown')
     end
+
+    # You can also perform other actions based on the payment status if needed
+    if payment_status == '0'
+      # Payment was successful
+    else
+      # Payment failed or canceled
+    end
+  else
+    # Handle the case where the payment record is not found
   end
+end
+
 end
