@@ -93,12 +93,20 @@ class Api::MpesasController < ApplicationController
     # Extract the payment status and other relevant data from the request
     payment_status = params.dig('Body', 'stkCallback', 'ResultCode')
     
+    result_code = case payment_status
+                when '0'
+                  '000000' # Payment was successful
+                when '1'
+                  '000001' # Payment failed
+                else
+                  '1032'   # Payment status is still pending
+                end
     # You can implement your logic here to update the payment status in your model (e.g., Payment model)
     # For example, you can use the `update_payment_status` method you shared earlier
     update_payment_status(payment_status)
     
     # Respond with the payment status as JSON
-    render json: { paymentStatus: payment_status }
+    render json: { paymentStatus: payment_status, ResultCode: result_code }
   end
 
   private
