@@ -97,9 +97,9 @@ class Api::MpesasController < ApplicationController
                 when '0'
                   '000000' # Payment was successful
                 when '1'
-                  '000001' # Payment failed
+                  '1032' # Payment failed
                 else
-                  '1032'   # Payment status is still pending
+                  ''   # Payment status is still pending
                 end
     # You can implement your logic here to update the payment status in your model (e.g., Payment model)
     # For example, you can use the `update_payment_status` method you shared earlier
