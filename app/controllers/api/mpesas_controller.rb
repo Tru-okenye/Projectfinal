@@ -41,25 +41,7 @@ class Api::MpesasController < ApplicationController
     puts "Payload: #{payload}"
     puts "Headers: #{headers}"
 
-  #   begin   
-  #     response = RestClient.post(url, payload, headers)
-  #     puts "Response code: #{response.code}"
-  #     puts "Response body: #{response.body}"
-  #     case response.code
-  #     when 200
-  #       render json: { success: true, data: JSON.parse(response.body) }
-  #     else
-  #       render json: { success: false, error: "Request failed with code #{response.code}", response: response.body }
-  #     end
-  #   rescue RestClient::ExceptionWithResponse => e
-  #     puts "RestClient::ExceptionWithResponse: #{e.message}"
-  #      puts "Response body: #{e.response.body}"
-  #     render json: { success: false, error: "Request failed with an exception", exception: e.message }
-  #   rescue StandardError => e
-  #     puts "StandardError: #{e.message}"
-  #     render json: { success: false, error: "An error occurred", exception: e.message }
-  #   end
-  # end
+ 
 
  begin
       response = RestClient.post(url, payload, headers)
@@ -87,19 +69,47 @@ class Api::MpesasController < ApplicationController
     end
   end
   
- skip_before_action :verify_authenticity_token, only: :callback 
+ 
 
- def callback
-  # Extract the payment status and other relevant data from the request
-  payment_status = params.dig('Body', 'stkCallback', 'ResultCode')
-  
-  # You can implement your logic here to update the payment status in your model (e.g., Payment model)
-  # For example, you can use the `update_payment_status` method you shared earlier
-  update_payment_status(payment_status)
-  
-  # Respond with the payment status as JSON
-  render json: { paymentStatus: payment_status }
+def stkquery
+     url = "https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query"
+        timestamp = "#{Time.now.strftime "%Y%m%d%H%M%S"}"
+        business_short_code = ENV["MPESA_SHORTCODE"]
+        password = Base64.strict_encode64("#{business_short_code}#{ENV["MPESA_PASSKEY"]}#{timestamp}")
+        payload = {
+        'BusinessShortCode': business_short_code,
+        'Password': password,
+        'Timestamp': timestamp,
+        'CheckoutRequestID': params[:checkoutRequestID]
+        }.to_json
+
+       headers = {
+      'Content-Type' => 'application/json',
+      'Authorization' => "Bearer #{get_access_token}"
+    }
+
+  response = RestClient::Request.new({
+    method: :post,
+    url: url,
+    payload: payload,
+    headers: headers
+  }).execute do |response, _request|
+    case response.code
+    when 500
+      { status: 'error', data: JSON.parse(response.to_str) }
+    when 400
+      { status: 'error', data: JSON.parse(response.to_str) }
+    when 200
+      { status: 'success', data: JSON.parse(response.to_str) }
+    else
+      { status: 'error', data: "Invalid response #{response.to_str} received." }
+    end
+  end
+
+  render json: response
 end
+
+
 
   private
 
@@ -134,41 +144,6 @@ end
 
     access_token.token
   end
-
- def update_payment_status(payment_status)
-  # Implement your logic here to update the payment status in your model
-  # For example, if you have a Payment model, you can update the payment status for a specific payment record
-
-  # Assuming you have a 'payment_id' parameter sent from the M-Pesa API
-  payment_id = params[:payment_id]
-  payment = Payment.find_by(id: payment_id)
-
-  if payment.present?
-    # Assuming you have a 'status' column in your Payment model to store the payment status
-    case payment_status
-    when '0'
-      # Payment was successful
-      payment.update(status: 'successful')
-    when '1'
-      # Payment failed
-      payment.update(status: 'failed')
-    when '1032'
-      # Payment was canceled by the user
-      payment.update(status: 'canceled')
-    else
-      # Handle other status codes if needed
-      payment.update(status: 'unknown')
-    end
-
-    # You can also perform other actions based on the payment status if needed
-    if payment_status == '0'
-      # Payment was successful
-    else
-      # Payment failed or canceled
-    end
-  else
-    # Handle the case where the payment record is not found
-  end
 end
 
-end
+

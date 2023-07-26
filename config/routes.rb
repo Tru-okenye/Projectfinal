@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     post 'employees/login', to: 'employees#login'
     post 'stkpush', to: 'mpesas#stkpush'
-    post 'callback', to: 'mpesas#callback'
+    post 'stkquery', to: 'mpesas#stkquery'
   
     resources :payments, only: [:create]
     
