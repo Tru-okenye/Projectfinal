@@ -72,60 +72,48 @@ class Api::MpesasController < ApplicationController
  
 
 def stkquery
-  checkout_request_id = params[:checkoutRequestID]
-  url = 'https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query'
+  url = "https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query"
   timestamp = Time.now.strftime('%Y%m%d%H%M%S')
-  business_short_code = ENV['MPESA_SHORTCODE']
-  password = Base64.strict_encode64("#{business_short_code}#{ENV['MPESA_PASSKEY']}#{timestamp}")
+  business_short_code = ENV["MPESA_SHORTCODE"]
+  password = Base64.strict_encode64("#{business_short_code}#{ENV["MPESA_PASSKEY"]}#{timestamp}")
   payload = {
-    'BusinessShortCode': business_short_code,
-    'Password': password,
-    'Timestamp': timestamp,
-    'CheckoutRequestID': checkout_request_id
+    BusinessShortCode: business_short_code,
+    Password: password,
+    Timestamp: timestamp,
+    CheckoutRequestID: params[:checkoutRequestID]
   }.to_json
 
   headers = {
-    'Content-Type' => 'application/json',
-    'Authorization' => "Bearer #{get_access_token}"
+    Content_type: 'application/json',
+    Authorization: "Bearer #{get_access_token}"
   }
 
   begin
-    response = RestClient::Request.execute(
+    response = RestClient::Request.new({
       method: :post,
       url: url,
       payload: payload,
       headers: headers
-    )
-    data = JSON.parse(response.body)
-
-    if data.key?('Body') && data['Body'].key?('stkCallback')
-      stk_callback = data['Body']['stkCallback']
-      result_code = stk_callback['ResultCode']
-      result_desc = stk_callback['ResultDesc']
-
-      if result_code == '1032'
-        # Handle cancellation here
-        response_data = { 'status' => 'error', 'data' => { 'errorCode' => result_code, 'errorMessage' => result_desc } }
-      elsif result_code == '0'
-        # Handle successful transaction here
-        response_data = { 'status' => 'success', 'data' => { 'ResultCode' => result_code, 'ResultDesc' => result_desc } }
+    }).execute do |response, request|
+      case response.code
+      when 500
+        { status: 'error', data: JSON.parse(response.to_str) }
+      when 400
+        { status: 'error', data: JSON.parse(response.to_str) }
+      when 200
+        { status: 'success', data: JSON.parse(response.to_str) }
       else
-        # Handle other status codes here
-        response_data = { 'status' => 'error', 'data' => { 'errorCode' => result_code, 'errorMessage' => 'Payment failed or encountered an error.' } }
+        { status: 'error', data: "Invalid response #{response.to_str} received." }
       end
-    else
-      # Handle any other unexpected response here
-      response_data = { 'status' => 'error', 'data' => 'Invalid response format' }
     end
 
-    render json: response_data
+    render json: response
   rescue RestClient::ExceptionWithResponse => e
     # Handle any exceptions or errors here
-    response_data = { 'status' => 'error', 'data' => "Failed to query STK status: #{e.response}" }
+    response_data = { status: 'error', data: "Failed to query STK status: #{e.response}" }
     render json: response_data
   end
 end
-
 
 
   private
