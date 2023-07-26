@@ -71,53 +71,53 @@ class Api::MpesasController < ApplicationController
   
  
 
-def stkquery
-     url = "https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query"
-        timestamp = "#{Time.now.strftime "%Y%m%d%H%M%S"}"
-        business_short_code = ENV["MPESA_SHORTCODE"]
-        password = Base64.strict_encode64("#{business_short_code}#{ENV["MPESA_PASSKEY"]}#{timestamp}")
-        payload = {
-        'BusinessShortCode': business_short_code,
-        'Password': password,
-        'Timestamp': timestamp,
-        'CheckoutRequestID': params[:checkoutRequestID]
-        }.to_json
+def stkquery(checkout_request_id)
+  url = 'https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query'
+  timestamp = "#{Time.now.strftime('%Y%m%d%H%M%S')}"
+  business_short_code = ENV['MPESA_SHORTCODE']
+  password = Base64.strict_encode64("#{business_short_code}#{ENV['MPESA_PASSKEY']}#{timestamp}")
+  payload = {
+    'BusinessShortCode': business_short_code,
+    'Password': password,
+    'Timestamp': timestamp,
+    'CheckoutRequestID': checkout_request_id
+  }.to_json
 
-       headers = {
-      'Content-Type' => 'application/json',
-      'Authorization' => "Bearer #{get_access_token}"
-    }
+  headers = {
+    'Content-Type' => 'application/json',
+    'Authorization' => "Bearer #{get_access_token}"
+  }
 
   response = RestClient::Request.new({
     method: :post,
     url: url,
     payload: payload,
     headers: headers
-  }).execute do |response, _request|
-    case response.code
-    when 500
-      { status: 'error', data: JSON.parse(response.to_str) }
-    when 400
-      { status: 'error', data: JSON.parse(response.to_str) }
-    when 200
-      { status: 'success', data: JSON.parse(response.to_str) }
+  }).execute
+
+  data = JSON.parse(response.body)
+
+  if data.key?('Body') && data['Body'].key?('stkCallback')
+    stk_callback = data['Body']['stkCallback']
+    result_code = stk_callback['ResultCode']
+    result_desc = stk_callback['ResultDesc']
+
+    if result_code == '1032'
+      # Handle cancellation here
+      { 'status' => 'error', 'data' => { 'errorCode' => result_code, 'errorMessage' => result_desc } }
+     elsif result_code == '0'
+      # Handle successful transaction here
+      { 'status' => 'success', 'data' => { 'ResultCode' => result_code, 'ResultDesc' => result_desc } }
     else
-      { status: 'error', data: "Invalid response #{response.to_str} received." }
-    end
+      # Handle other status codes here
+      { 'status' => 'error', 'data' => { 'errorCode' => result_code, 'errorMessage' => 'Payment failed or encountered an error.' } }
   end
-
-
-# Check for specific error codes and handle them accordingly
-if response[:status] == 'error' && response[:data].key?('stkCallback')
-  case response[:data]['stkCallback']['ResultCode']
-  when 1032
-    response[:data]['errorMessage'] = 'The transaction was canceled by the user.'
-  else
-    response[:data]['errorMessage'] = 'Payment failed or encountered an error.'
-  end
-end
-
-  render json: response
+else 
+  # Handle any other unexpected response here
+    { 'status' => 'error', 'data' => 'Invalid response format' }
+rescue RestClient::ExceptionWithResponse => e
+  # Handle any exceptions or errors here
+  { 'status' => 'error', 'data' => "Failed to query STK status: #{e.response}" }
 end
 
 
