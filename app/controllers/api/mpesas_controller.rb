@@ -108,16 +108,15 @@ def stkquery
 
 
 # Check for specific error codes and handle them accordingly
-if response[:status] == 'error' && response[:data].key?('errorCode')
-  case response[:data]['errorCode']
-  when '500.001.1001'
-    response[:data]['errorMessage'] = 'The transaction is still being processed. Please wait for a moment.'
-  when '500.001.1002'
+if response[:status] == 'error' && response[:data].key?('stkCallback')
+  case response[:data]['stkCallback']['ResultCode']
+  when 1032
     response[:data]['errorMessage'] = 'The transaction was canceled by the user.'
   else
     response[:data]['errorMessage'] = 'Payment failed or encountered an error.'
   end
 end
+
   render json: response
 end
 
