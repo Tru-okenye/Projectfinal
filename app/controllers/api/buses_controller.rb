@@ -16,11 +16,7 @@ class Api::BusesController < ApplicationController
   end
 
   def create
-  existing_bus = Bus.find_by(number_plate: bus_params[:number_plate])
-
-  if existing_bus
-    render json: { error: 'Bus with the same number plate already exists' }, status: :unprocessable_entity
-  else
+ 
     bus = Bus.new(bus_params)
 
     if bus.save
@@ -28,7 +24,6 @@ class Api::BusesController < ApplicationController
     else
       render json: { error: bus.errors.full_messages }, status: :unprocessable_entity
     end
-  end
 end
 
 

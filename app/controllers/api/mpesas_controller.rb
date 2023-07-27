@@ -3,19 +3,14 @@ require 'rest-client'
 class Api::MpesasController < ApplicationController
   
 
-  MPESA_CONSUMER_KEY = 'lfPeIPhZ7KDHfyNCFILttArLsKhZv0Ma'
-  MPESA_CONSUMER_SECRET = 'Voqvlbj5qApy6YEK'
-  MPESA_PASSKEY = 'fef66eba0f3f6485df404ac4980e3f49924cc8a8b3e6ef7dd6bbc238cdd0629c'
-  MPESA_SHORTCODE = '6437127'
-
   def stkpush
     phoneNumber = params[:phoneNumber]
     amount = params[:amount]
 
     url = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
     timestamp = Time.now.strftime('%Y%m%d%H%M%S')
-    business_short_code = MPESA_SHORTCODE
-    password = Base64.strict_encode64("#{business_short_code}#{MPESA_PASSKEY}#{timestamp}")
+    business_short_code = ENV["MPESA_SHORTCODE"]
+    password = Base64.strict_encode64("#{business_short_code}#{ENV["MPESA_PASSKEY"]}#{timestamp}")
 
     payload = {
       'BusinessShortCode' => business_short_code,
@@ -26,7 +21,7 @@ class Api::MpesasController < ApplicationController
       'PartyA' => phoneNumber,
       'PartyB' => '8676510',
       'PhoneNumber' => phoneNumber,
-      'CallBackURL' => 'https://lets-ride-fe42d9bf40d4.herokuapp.com/api/stkquery',
+      'CallBackURL' => ENV["CALLBACK_URL"],
       'AccountReference' => 'mybuss',
       'TransactionDesc' => 'Payment for my bus'
     }.to_json
@@ -111,6 +106,7 @@ def stkquery
   rescue RestClient::ExceptionWithResponse => e
     # Handle any exceptions or errors here
     response_data = { status: 'error', data: "Failed to query STK status: #{e.response}" }
+    
     render json: response_data
   end
 end
@@ -121,8 +117,8 @@ end
 
   def generate_access_token_request
     url = 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
-    consumer_key = MPESA_CONSUMER_KEY
-    consumer_secret = MPESA_CONSUMER_SECRET
+    consumer_key = ENV['MPESA_CONSUMER_KEY']
+    consumer_secret = ENV['MPESA_CONSUMER_SECRET']
     userpass = Base64.strict_encode64("#{consumer_key}:#{consumer_secret}")
     headers = {
       'Authorization' => "Basic #{userpass}"
