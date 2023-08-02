@@ -19,16 +19,6 @@ class Api::BusesController < ApplicationController
  
     bus = Bus.new(bus_params)
 
-   # Convert the time to HH:mm format before saving
-    time = params[:bus][:time]
- time_obj = Time.zone.parse(time) # Parse the time string to a Time object
- formatted_time = time_obj.strftime('%H:%M')
-   # Merge the formatted time into the bus_params
-  bus_params_with_time = bus_params.merge(time: formatted_time)
-
-  
-    bus = Bus.new(bus_params_with_time)
-
     if bus.save
       render json: bus, status: :created
     else
