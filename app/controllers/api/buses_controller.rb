@@ -19,8 +19,8 @@ class Api::BusesController < ApplicationController
  
     bus = Bus.new(bus_params)
 
-      # Convert the time to EAT before saving
-  bus.time = ActiveSupport::TimeZone['Nairobi'].parse(params[:bus][:time])
+  # Convert the time to EAT before saving
+    bus.time = ActiveSupport::TimeZone['Africa/Nairobi'].parse(params[:bus][:time])
 
     if bus.save
       render json: bus, status: :created
