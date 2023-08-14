@@ -1,6 +1,6 @@
 # README
 BUS BOOKING APPLICATION
-This is a Backend code for Bus a Bus booking application written with ruby on rails.
+This is a Backend code for a Bus booking application written with ruby on rails.
 this is where my database recides. Records of employees and buses, payments.
 INTERGRATIONS
 1) MPESA API
