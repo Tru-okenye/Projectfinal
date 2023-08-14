@@ -1,24 +1,10 @@
 # README
+BUS BOOKING APPLICATION
+This is a Backend code for Bus a Bus booking application written with ruby on rails.
+this is where my database recides. Records of employees and buses, payments.
+INTERGRATIONS
+1) MPESA API
+It also shows how to intergrate MPESA API since there was payment involved during booking.
+And the specific method was MPESA STK push. you can check that in the mpesa controller.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+You can check the corresponding frontend code for this project which has GOOGLE MAPS API intergration.
