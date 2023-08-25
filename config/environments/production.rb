@@ -9,7 +9,7 @@ Rails.application.configure do
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins 'https://bus-booking-frontend-swart.vercel.app/'  # Replace this with the actual URL of your frontend
-    resource '/api/*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
+    resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
 end
 
