@@ -8,7 +8,7 @@ Rails.application.configure do
 # config/application.rb or config/initializers/cors.rb
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'https://bus-booking-frontend-swart.vercel.app/'  # Replace this with the actual URL of your frontend
+    origins 'https://bus-booking-frontend-swart.vercel.app'  # Replace this with the actual URL of your frontend
     resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
 end
