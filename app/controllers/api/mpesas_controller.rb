@@ -75,7 +75,7 @@ def stkquery
     BusinessShortCode: business_short_code,
     Password: password,
     Timestamp: timestamp,
-    CheckoutRequestID: params[:checkoutRequestID]
+    CheckoutRequestID: params[:checkoutRequestID] 
   }.to_json
 
   headers = {
